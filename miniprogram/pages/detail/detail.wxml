@@ -1,0 +1,15 @@
+<!--miniprogram/pages/detail/detail.wxml-->
+<view class="container">
+  <view class='title_container'>
+    <Text class="start">{{line.length > 0 && line[0] ? line[0].zdmc : ''}}</Text>
+    <button class="arrow" bindtap='onReverseDirection'>-></button>
+    <Text class="end">{{line.length > 0 && line[1] ? line[1].zdmc : ''}}</Text>
+  </view>
+  
+  <view class='stops_container'>
+    <text class="stop" id='{{stop.id}}' bindtap="onDetail" wx:for='{{line}}' wx:for-item="stop" wx:key='{{stop.id}}'>
+      {{stop.id}} {{stop.zdmc}}
+    </text>
+  </view>
+</view>
+

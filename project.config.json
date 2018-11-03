@@ -2,15 +2,17 @@
 	"miniprogramRoot": "miniprogram/",
 	"cloudfunctionRoot": "cloudfunctions/",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"nodeModules": true,
+		"uglifyFileName": true
 	},
 	"appid": "wxdb2941c7193e6457",
 	"projectname": "700Bus",
-	"libVersion": "2.2.5",
+	"libVersion": "2.3.2",
 	"compileType": "miniprogram",
 	"condition": {
 		"search": {

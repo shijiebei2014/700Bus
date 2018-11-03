@@ -48,15 +48,21 @@ Page({
       bus_name += '路';
     }
 
-    wx.request({
+    wx.navigateTo({
+      url: `../detail/detail?bus_name=${bus_name}`,
+    })
+    /*wx.request({
       url: `http://47.98.115.56:3000/search?name=${bus_name}`,
       success: function(data) {
         console.log(data)
+        wx.navigateTo({
+          url: '../detail/detail',
+        })
       },
       fail: function(err) {
         console.log('err:', err)
       }
-    })
+    })*/
     console.log(bus_name)
   },
 
