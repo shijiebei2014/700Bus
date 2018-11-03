@@ -77,6 +77,12 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
     const self = this
 
     wx.showLoading({
@@ -86,8 +92,8 @@ Page({
     wx.request({
       url: `http://47.98.115.56:3000/search?name=${this.data.bus_name}`,
       success: function (data) {
-        const {lineResults0, lineResults1} = data.data
-        const {direction} = self.data
+        const { lineResults0, lineResults1 } = data.data
+        const { direction } = self.data
         let line = []
 
         if (lineResults0 && lineResults0.direction == direction + '') {
@@ -97,26 +103,31 @@ Page({
           line = lineResults1.stops;
         }
         self.setData({
-          lines: {lineResults0, lineResults1},
+          lines: { lineResults0, lineResults1 },
           line
         })
       },
       fail: function (err) {
+        wx.showModal({
+          title: '提示',
+          content: err,
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
         console.log('err:', err)
       },
-      complete: function() {
+      complete: function () {
         wx.hideLoading({
           title: '加载中',
         })
       }
     })
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    
   },
 
   /**
