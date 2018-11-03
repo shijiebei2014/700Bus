@@ -3,6 +3,7 @@ const app = getApp()
 
 Page({
   data: {
+    bus_name: '',
     avatarUrl: './user-unlogin.png',
     userInfo: {},
     logged: false,
@@ -34,6 +35,34 @@ Page({
         }
       }
     })
+  },
+
+  onSearch: function(e) {
+    let {bus_name} = this.data
+    const regExp = /^\d+(\.\d+)?$/
+
+    if (bus_name == "") {
+      return false;
+    }
+    if (regExp.test(bus_name)) {
+      bus_name += '路';
+    }
+
+    wx.request({
+      url: `http://47.98.115.56:3000/search?name=${bus_name}`,
+      success: function(data) {
+        console.log(data)
+      },
+      fail: function(err) {
+        console.log('err:', err)
+      }
+    })
+    console.log(bus_name)
+  },
+
+  bindBusInput: function(e) {
+    var bus_name = e.detail.value
+    this.setData({ bus_name })
   },
 
   onGetUserInfo: function(e) {
