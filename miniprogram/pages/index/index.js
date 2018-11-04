@@ -1,4 +1,7 @@
 //index.js
+import promisify from '../../utils/promisify'
+import { DECRYPT, APPID } from '../../constants/index'
+
 const app = getApp()
 
 Page({
@@ -11,6 +14,15 @@ Page({
     requestResult: ''
   },
 
+  onReady: function() {
+    wx.onNetworkStatusChange(function(res){
+      console.log(res.isConnected)
+      console.log(res.networkType)
+    })
+
+    promisify(wx.getLocation).then(console.log).catch(console.log)
+  },
+
   onLoad: function() {
     if (!wx.cloud) {
       wx.redirectTo({
@@ -18,23 +30,52 @@ Page({
       })
       return
     }
-
     // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              this.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo
-              })
-            }
+    promisify(wx.getSetting).then((res) => {
+      if (res.authSetting['scope.userInfo']) {
+        // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+        return promisify(wx.getUserInfo).then((res) => {
+          const { iv } = res
+          this.setData({
+            avatarUrl: res.userInfo.avatarUrl,
+            userInfo: res.userInfo
           })
-        }
+          return iv
+        })
       }
+    }).then(() => {
+      return promisify(wx.getWeRunData).then((res) => {
+        const { iv, encryptedData } = res
+        return app.getSessionKey().then((session_key) => {
+          if (session_key) {
+            promisify(wx.request, {
+              url: DECRYPT,
+              method: 'POST',
+              header: {
+                'content-type': 'application/json' // 默认值
+              },
+              data: {
+                iv,
+                data: encryptedData,
+                appId: APPID,
+                session_key
+              }
+            }).then(console.log).catch(console.error)
+          }
+        })
+      })
     })
+
+    // if (!res.authSetting['scope.userLocation']) {
+    //   wx.openSetting({
+    //     success(res) {
+    //       console.log(res)
+    //     },
+    //     fail(err) {
+    //       console.log(err)
+    //     }
+    //   })
+    // }
   },
 
   onSearch: function(e) {
@@ -116,7 +157,7 @@ Page({
         })
 
         const filePath = res.tempFilePaths[0]
-        
+
         // 上传图片
         const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
         wx.cloud.uploadFile({
@@ -128,7 +169,7 @@ Page({
             app.globalData.fileID = res.fileID
             app.globalData.cloudPath = cloudPath
             app.globalData.imagePath = filePath
-            
+
             wx.navigateTo({
               url: '../storageConsole/storageConsole'
             })

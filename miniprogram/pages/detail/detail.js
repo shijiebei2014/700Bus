@@ -1,4 +1,6 @@
 // miniprogram/pages/detail/detail.js
+import {SEARCH, SEARCH_STOP} from '../../constants/index.js'
+
 Page({
 
   /**
@@ -31,7 +33,7 @@ Page({
       title: '加载中',
     })
     wx.request({
-      url: `http://47.98.115.56:3000/search_stop?stopid=${id}&name=${this.data.bus_name}&direction=${this.data.direction + '' === true + '' ? 0 : 1}`,
+      url: `${SEARCH_STOP}?stopid=${id}&name=${this.data.bus_name}&direction=${this.data.direction + '' === true + '' ? 0 : 1}`,
       success: function (result) {
         const { data } = result
         let content = ''
@@ -90,7 +92,7 @@ Page({
     })
 
     wx.request({
-      url: `http://47.98.115.56:3000/search?name=${this.data.bus_name}`,
+      url: `${SEARCH}?name=${this.data.bus_name}`,
       success: function (data) {
         const { lineResults0, lineResults1 } = data.data
         const { direction } = self.data

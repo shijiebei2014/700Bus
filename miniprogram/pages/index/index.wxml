@@ -3,4 +3,11 @@
     <input name="bus" placeholder='请输入完整的线路名称，如"933路"' class="bus_name" value="{{bus_name}}" bindinput='bindBusInput'></input>
     <button bindtap="onSearch">查询</button>
   </form>
+
+  <button 
+      open-type="getUserInfo" 
+      bindgetuserinfo="onGetUserInfo"
+      class="userinfo-avatar"
+      style="background-image: url({{avatarUrl}})"
+    ></button>
 </view>
