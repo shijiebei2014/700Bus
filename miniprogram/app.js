@@ -1,7 +1,6 @@
 //app.js
 import promisify from './utils/promisify'
 import { APPID, APPSECRET} from './constants/index'
-var WXBizDataCrypt = require('utils/WXBizDataCrypt.js');
 
 const AppId = APPID
 const AppSecret = APPSECRET
